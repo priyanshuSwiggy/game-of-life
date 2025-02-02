@@ -5,8 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class GridTest {
@@ -23,6 +22,12 @@ public class GridTest {
     @Mock
     private Cell cell11;
 
+    @Mock
+    private Cell cell20;
+
+    @Mock
+    private Cell cell21;
+
     private Grid grid;
 
     private Cell[][] cells;
@@ -30,17 +35,12 @@ public class GridTest {
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        cells = new Cell[][]{{cell00, cell01}, {cell10, cell11}};
-        grid = new Grid(2, 2, cells);
+        cells = new Cell[][]{{cell00, cell01}, {cell10, cell11}, {cell20, cell21}};
+        grid = new Grid(3, 2, cells);
     }
 
     @Test
     public void testDisplay_showsMixedCells() {
-        when(cell00.isAlive()).thenReturn(true);
-        when(cell01.isAlive()).thenReturn(false);
-        when(cell10.isAlive()).thenReturn(true);
-        when(cell11.isAlive()).thenReturn(false);
-
         grid.display();
 
         verify(cell00, times(1)).isAlive();
@@ -108,4 +108,34 @@ public class GridTest {
         verify(cell10, times(1)).makeAlive();
         verify(cell11, times(1)).makeAlive();
     }
+
+    @Test
+    public void update_doesNotChangeCellWithTwoAliveNeighbors() {
+        when(cell00.isAlive()).thenReturn(true);
+        when(cell01.isAlive()).thenReturn(true);
+        when(cell10.isAlive()).thenReturn(true);
+        when(cell11.isAlive()).thenReturn(false);
+
+        grid.update();
+
+        verify(cell00, never()).kill();
+        verify(cell00, never()).makeAlive();
+    }
+
+    @Test
+    public void update_doesNotChangeCellWithThreeAliveNeighbors() {
+        when(cell00.isAlive()).thenReturn(true);
+        when(cell01.isAlive()).thenReturn(true);
+        when(cell10.isAlive()).thenReturn(true);
+        when(cell11.isAlive()).thenReturn(true);
+
+        grid.update();
+
+        verify(cell00, never()).kill();
+        verify(cell00, never()).makeAlive();
+    }
+
+
+
+
 }

@@ -8,4 +8,7 @@ public class Cell {
     public void makeAlive() {
         this.state = CellState.ALIVE;
     }
+    public void kill() {
+        this.state = CellState.DEAD;
+    }
 }

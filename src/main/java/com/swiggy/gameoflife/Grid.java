@@ -55,7 +55,26 @@ public class Grid {
     }
 
     public void update() {
+        Cell[][] nextGeneration = new Cell[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                nextGeneration[i][j] = cells[i][j];
+                int aliveNeighbors = 3;
+
+                if (cells[i][j].isAlive()) {
+                    if (aliveNeighbors <= 1 || aliveNeighbors >= 4) {
+                        nextGeneration[i][j].kill();
+                    }
+                } else {
+                    if (aliveNeighbors == 3) {
+                        nextGeneration[i][j].makeAlive();
+                    }
+                }
+            }
+        }
+        this.cells = nextGeneration;
     }
+
 
     public void randomSeeding(int m, int n, int seedPercentage) {
         int totalCells = m * n;
