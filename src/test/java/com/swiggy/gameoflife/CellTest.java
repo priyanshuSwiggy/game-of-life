@@ -54,6 +54,7 @@ public class CellTest {
     @Test
     public void testKill_changesCellToDead() {
         aliveCell.kill();
+
         assertFalse(aliveCell.isAlive());
     }
 
@@ -68,26 +69,40 @@ public class CellTest {
     }
 
     @Test
-    public void testNextState_killsCellWithZeroOneFourFiveAliveNeighbors() {
+    public void nextState_killsCellWithInvalidAliveNeighbors() {
         Cell nextState = initialCell.nextState(aliveNeighbors);
+
         assertEquals(expectedAliveState, nextState.isAlive());
     }
     @Test
     public void testNextState_revivesCellWithExactlyThreeAliveNeighbors() {
         Cell nextState = deadCell.nextState(3);
+
         assertTrue(nextState.isAlive());
     }
 
     @Test
     public void testNextState_doesNotChangeCellWithTwoAliveNeighbors() {
         Cell nextState = aliveCell.nextState(2);
+
         assertTrue(nextState.isAlive());
     }
 
     @Test
     public void testNextState_doesNotChangeCellWithThreeAliveNeighbors() {
         Cell nextState = aliveCell.nextState(3);
+
         assertTrue(nextState.isAlive());
+    }
+
+    @Test
+    public void testPrintCell_returnsSymbolForAliveCell() {
+        assertEquals(CellState.ALIVE.getSymbol(), aliveCell.printCell());
+    }
+
+    @Test
+    public void testPrintCell_returnsSymbolForDeadCell() {
+        assertEquals(CellState.DEAD.getSymbol(), deadCell.printCell());
     }
 
 }
