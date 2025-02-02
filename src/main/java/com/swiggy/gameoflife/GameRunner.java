@@ -11,14 +11,18 @@ public class GameRunner {
         this.scanner = scanner;
     }
 
-    public void startGame(int m, int n, int seedPercentage) {
-        grid.randomSeeding(m, n, seedPercentage);
-        while (true) {
-            grid.display();
-            if (grid.isAllDead() || "q".equalsIgnoreCase(scanner.nextLine())) {
-                break;
+    public void startGame(int rows, int cols, int seedPercentage) {
+        try {
+            grid.seedRandomCells(rows, cols, seedPercentage);
+            while (true) {
+                grid.display();
+                if (grid.areAllCellsDead() || "q".equalsIgnoreCase(scanner.nextLine())) {
+                    break;
+                }
+                grid.update();
             }
-            grid.update();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
     }
 }

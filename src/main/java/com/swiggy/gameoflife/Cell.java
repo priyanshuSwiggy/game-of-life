@@ -7,10 +7,6 @@ public class Cell {
         this.state = state;
     }
 
-    public Cell() {
-        this.state = CellState.DEAD;
-    }
-
     public boolean isAlive() {
         return this.state == CellState.ALIVE;
     }

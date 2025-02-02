@@ -36,25 +36,24 @@ public class CellTest {
     }
 
     @Test
-    public void testIsAlive_returnsTrueWhenCellIsAlive() {
+    public void testIsAlive_ReturnsTrue_WhenCellIsAlive() {
         assertTrue(aliveCell.isAlive());
     }
 
     @Test
-    public void testIsAlive_returnsFalseWhenCellIsDead() {
+    public void testIsAlive_ReturnsFalse_WhenCellIsDead() {
         assertFalse(deadCell.isAlive());
     }
 
     @Test
-    public void testMakeAlive_changesCellToAlive() {
+    public void testMakeAlive_ChangesCellToAlive() {
         deadCell.makeAlive();
         assertTrue(deadCell.isAlive());
     }
 
     @Test
-    public void testKill_changesCellToDead() {
+    public void testKill_ChangesCellToDead() {
         aliveCell.kill();
-
         assertFalse(aliveCell.isAlive());
     }
 
@@ -69,40 +68,36 @@ public class CellTest {
     }
 
     @Test
-    public void nextState_killsCellWithInvalidAliveNeighbors() {
+    public void testNextState_KillsCellWithInvalidAliveNeighbors() {
         Cell nextState = initialCell.nextState(aliveNeighbors);
-
         assertEquals(expectedAliveState, nextState.isAlive());
     }
+
     @Test
-    public void testNextState_revivesCellWithExactlyThreeAliveNeighbors() {
+    public void testNextState_RevivesCellWithExactlyThreeAliveNeighbors() {
         Cell nextState = deadCell.nextState(3);
-
         assertTrue(nextState.isAlive());
     }
 
     @Test
-    public void testNextState_doesNotChangeCellWithTwoAliveNeighbors() {
+    public void testNextState_DoesNotChangeCellWithTwoAliveNeighbors() {
         Cell nextState = aliveCell.nextState(2);
-
         assertTrue(nextState.isAlive());
     }
 
     @Test
-    public void testNextState_doesNotChangeCellWithThreeAliveNeighbors() {
+    public void testNextState_DoesNotChangeCellWithThreeAliveNeighbors() {
         Cell nextState = aliveCell.nextState(3);
-
         assertTrue(nextState.isAlive());
     }
 
     @Test
-    public void testPrintCell_returnsSymbolForAliveCell() {
+    public void testPrintCell_ReturnsSymbolForAliveCell() {
         assertEquals(CellState.ALIVE.getSymbol(), aliveCell.printCell());
     }
 
     @Test
-    public void testPrintCell_returnsSymbolForDeadCell() {
+    public void testPrintCell_ReturnsSymbolForDeadCell() {
         assertEquals(CellState.DEAD.getSymbol(), deadCell.printCell());
     }
-
 }

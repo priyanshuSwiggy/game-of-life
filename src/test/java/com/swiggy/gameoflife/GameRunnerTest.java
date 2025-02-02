@@ -10,7 +10,6 @@ import java.util.Scanner;
 
 import static org.mockito.Mockito.*;
 
-
 public class GameRunnerTest {
 
     @InjectMocks
@@ -28,17 +27,17 @@ public class GameRunnerTest {
     }
 
     @Test
-    public void testStartGameSetSeedPercentage() {
-        doNothing().when(grid).randomSeeding(anyInt(), anyInt(), anyInt());
+    public void testStartGame_SetSeedPercentage() {
+        doNothing().when(grid).seedRandomCells(anyInt(), anyInt(), anyInt());
         when(scanner.nextLine()).thenReturn("q");
 
         gameRunner.startGame(4, 4, 60);
 
-        verify(grid, times(1)).randomSeeding(4, 4, 60);
+        verify(grid, times(1)).seedRandomCells(4, 4, 60);
     }
 
     @Test
-    public void testStartGameDisplayGrid() {
+    public void testStartGame_DisplayGrid() {
         when(scanner.nextLine()).thenReturn("q");
 
         gameRunner.startGame(4, 4, 60);
@@ -47,17 +46,17 @@ public class GameRunnerTest {
     }
 
     @Test
-    public void testStartGame_exitsWhenAllCellsAreDead() {
-        when(grid.isAllDead()).thenReturn(true);
+    public void testStartGame_ExitsWhenAllCellsAreDead() {
+        when(grid.areAllCellsDead()).thenReturn(true);
         when(scanner.nextLine()).thenReturn("q");
 
         gameRunner.startGame(4, 4, 60);
 
-        verify(grid, times(1)).isAllDead();
+        verify(grid, times(1)).areAllCellsDead();
     }
 
     @Test
-    public void testStartGame_exitsOnUserQuit() {
+    public void testStartGame_ExitsOnUserQuit() {
         when(scanner.nextLine()).thenReturn("q");
 
         gameRunner.startGame(4, 4, 60);
@@ -66,8 +65,8 @@ public class GameRunnerTest {
     }
 
     @Test
-    public void testStartGame_updateGrid() {
-        when(grid.isAllDead()).thenReturn(false);
+    public void testStartGame_UpdateGrid() {
+        when(grid.areAllCellsDead()).thenReturn(false);
         when(scanner.nextLine()).thenReturn("q");
 
         gameRunner.startGame(4, 4, 60);

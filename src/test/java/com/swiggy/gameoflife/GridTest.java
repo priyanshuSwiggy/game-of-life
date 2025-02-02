@@ -1,9 +1,15 @@
 package com.swiggy.gameoflife;
 
+import com.swiggy.gameoflife.exception.InvalidCellListException;
+import com.swiggy.gameoflife.exception.InvalidGridDimensionsException;
+import com.swiggy.gameoflife.exception.InvalidSeedPercentageException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -33,12 +39,16 @@ public class GridTest {
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        Cell[][] cells = new Cell[][]{{cell00, cell01}, {cell10, cell11}, {cell20, cell21}};
+        List<List<Cell>> cells = Arrays.asList(
+                Arrays.asList(cell00, cell01),
+                Arrays.asList(cell10, cell11),
+                Arrays.asList(cell20, cell21)
+        );
         grid = new Grid(3, 2, cells);
     }
 
     @Test
-    public void testDisplay_showsMixedCells() {
+    public void testDisplay_ShowsMixedCells() {
         grid.display();
 
         verify(cell00, times(1)).printCell();
@@ -48,28 +58,28 @@ public class GridTest {
     }
 
     @Test
-    public void testIsAllDead_returnsTrueWhenAllCellsAreDead() {
+    public void testAreAllCellsDead_ReturnsTrue_WhenAllCellsAreDead() {
         when(cell00.isAlive()).thenReturn(false);
         when(cell01.isAlive()).thenReturn(false);
         when(cell10.isAlive()).thenReturn(false);
         when(cell11.isAlive()).thenReturn(false);
 
-        assertTrue(grid.isAllDead());
+        assertTrue(grid.areAllCellsDead());
     }
 
     @Test
-    public void testIsAllDead_returnsFalseWhenAnyCellIsAlive() {
+    public void testAreAllCellsDead_ReturnsFalse_WhenAnyCellIsAlive() {
         when(cell00.isAlive()).thenReturn(false);
         when(cell01.isAlive()).thenReturn(true);
         when(cell10.isAlive()).thenReturn(false);
         when(cell11.isAlive()).thenReturn(false);
 
-        assertFalse(grid.isAllDead());
+        assertFalse(grid.areAllCellsDead());
     }
 
     @Test
-    public void testRandomSeeding_setsCorrectNumberOfAliveCells() {
-        grid.randomSeeding(2, 2, 50);
+    public void testSeedRandomCells_SetsCorrectNumberOfAliveCells() {
+        grid.seedRandomCells(2, 2, 50);
 
         verify(cell00, atMost(1)).makeAlive();
         verify(cell01, atMost(1)).makeAlive();
@@ -78,8 +88,8 @@ public class GridTest {
     }
 
     @Test
-    public void testRandomSeeding_doesNotExceedGridBounds() {
-        grid.randomSeeding(2, 2, 100);
+    public void testSeedRandomCells_DoesNotExceedGridBounds() {
+        grid.seedRandomCells(2, 2, 100);
 
         verify(cell00, atMost(1)).makeAlive();
         verify(cell01, atMost(1)).makeAlive();
@@ -88,8 +98,8 @@ public class GridTest {
     }
 
     @Test
-    public void testRandomSeeding_handlesZeroPercentage() {
-        grid.randomSeeding(2, 2, 0);
+    public void testSeedRandomCells_HandlesZeroPercentage() {
+        grid.seedRandomCells(2, 2, 0);
 
         verify(cell00, never()).makeAlive();
         verify(cell01, never()).makeAlive();
@@ -98,8 +108,8 @@ public class GridTest {
     }
 
     @Test
-    public void testRandomSeeding_handlesFullPercentage() {
-        grid.randomSeeding(2, 2, 100);
+    public void testSeedRandomCells_HandlesFullPercentage() {
+        grid.seedRandomCells(2, 2, 100);
 
         verify(cell00, times(1)).makeAlive();
         verify(cell01, times(1)).makeAlive();
@@ -108,7 +118,7 @@ public class GridTest {
     }
 
     @Test
-    public void update_doesNotChangeCellWithTwoAliveNeighbors() {
+    public void testUpdate_DoesNotChangeCellWithTwoAliveNeighbors() {
         when(cell00.isAlive()).thenReturn(true);
         when(cell01.isAlive()).thenReturn(true);
         when(cell10.isAlive()).thenReturn(true);
@@ -121,7 +131,7 @@ public class GridTest {
     }
 
     @Test
-    public void update_doesNotChangeCellWithThreeAliveNeighbors() {
+    public void testUpdate_DoesNotChangeCellWithThreeAliveNeighbors() {
         when(cell00.isAlive()).thenReturn(true);
         when(cell01.isAlive()).thenReturn(true);
         when(cell10.isAlive()).thenReturn(true);
@@ -134,7 +144,7 @@ public class GridTest {
     }
 
     @Test
-    public void update_killsCellWithOneOrFewerAliveNeighbors() {
+    public void testUpdate_KillsCellWithOneOrFewerAliveNeighbors() {
         when(cell00.isAlive()).thenReturn(true);
         when(cell01.isAlive()).thenReturn(false);
         when(cell10.isAlive()).thenReturn(false);
@@ -149,9 +159,8 @@ public class GridTest {
         verify(cell00, never()).makeAlive();
     }
 
-
     @Test
-    public void update_killsCellWithFourOrMoreAliveNeighbors() {
+    public void testUpdate_KillsCellWithFourOrMoreAliveNeighbors() {
         when(cell00.isAlive()).thenReturn(true);
         when(cell01.isAlive()).thenReturn(true);
         when(cell10.isAlive()).thenReturn(true);
@@ -167,9 +176,8 @@ public class GridTest {
         verify(cell11, never()).makeAlive();
     }
 
-
     @Test
-    public void update_makesCellAliveWithExactlyThreeAliveNeighbors() {
+    public void testUpdate_MakesCellAliveWithExactlyThreeAliveNeighbors() {
         when(cell00.isAlive()).thenReturn(false);
         when(cell01.isAlive()).thenReturn(true);
         when(cell10.isAlive()).thenReturn(true);
@@ -181,6 +189,21 @@ public class GridTest {
 
         verify(cell00, times(1)).nextState(3);
         verify(cell00, never()).kill();
+    }
+
+    @Test(expected = InvalidGridDimensionsException.class)
+    public void testInvalidGridDimensionsException_ThrowsException_WhenDimensionsAreInvalid() {
+        new Grid(-1, 2, null);
+    }
+
+    @Test(expected = InvalidCellListException.class)
+    public void testInvalidCellListException_ThrowsException_WhenCellListIsNull() {
+        new Grid(3, 2, null);
+    }
+
+    @Test(expected = InvalidSeedPercentageException.class)
+    public void testInvalidSeedPercentageException_ThrowsException_WhenSeedPercentageIsInvalid() {
+        grid.seedRandomCells(2, 2, 150);
     }
 
 }
