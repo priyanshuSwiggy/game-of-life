@@ -11,8 +11,8 @@ public class GameRunner {
     }
 
     public void startGame(int m, int n, int seedPercentage) {
+        grid.seed(m, n, seedPercentage);
         while(true) {
-            grid.seed(m, n, seedPercentage);
             grid.display();
             if (grid.isAllDead() || "q".equals(scanner.nextLine())) {
                 break;
