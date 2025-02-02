@@ -41,9 +41,9 @@ public class GameRunnerTest {
         gameRunner = spy(new GameRunner(grid, scanner));
 
         gameRunner.startGame(4, 4, 60);
-        grid.seed(4, 4, 60);
+        grid.randomSeeding(4, 4, 60);
 
-        verify(grid, atLeastOnce()).seed(4, 4, 60);
+        verify(grid, atLeastOnce()).randomSeeding(4, 4, 60);
     }
 
     @Test

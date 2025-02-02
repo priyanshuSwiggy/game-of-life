@@ -5,4 +5,7 @@ public class Cell {
     public boolean isAlive() {
         return state.equals(CellState.ALIVE);
     }
+    public void makeAlive() {
+        this.state = CellState.ALIVE;
+    }
 }

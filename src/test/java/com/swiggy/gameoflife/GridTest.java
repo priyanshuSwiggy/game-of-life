@@ -65,4 +65,44 @@ public class GridTest {
 
         assertFalse(grid.isAllDead());
     }
+
+    @Test
+    public void testRandomSeeding_setsCorrectNumberOfAliveCells() {
+        grid.randomSeeding(2, 2, 50);
+
+        verify(cells[0][0], atMost(1)).makeAlive();
+        verify(cells[0][1], atMost(1)).makeAlive();
+        verify(cells[1][0], atMost(1)).makeAlive();
+        verify(cells[1][1], atMost(1)).makeAlive();
+    }
+
+    @Test
+    public void testRandomSeeding_doesNotExceedGridBounds() {
+        grid.randomSeeding(2, 2, 100);
+
+        verify(cells[0][1], atMost(1)).makeAlive();
+        verify(cells[0][0], atMost(1)).makeAlive();
+        verify(cells[1][0], atMost(1)).makeAlive();
+        verify(cells[1][1], atMost(1)).makeAlive();
+    }
+
+    @Test
+    public void testRandomSeeding_handlesZeroPercentage() {
+        grid.randomSeeding(2, 2, 0);
+
+        verify(cells[0][0], never()).makeAlive();
+        verify(cells[0][1], never()).makeAlive();
+        verify(cells[1][0], never()).makeAlive();
+        verify(cells[1][1], never()).makeAlive();
+    }
+
+    @Test
+    public void testRandomSeeding_handlesFullPercentage() {
+        grid.randomSeeding(2, 2, 100);
+
+        verify(cells[0][0], times(1)).makeAlive();
+        verify(cells[0][1], times(1)).makeAlive();
+        verify(cells[1][0], times(1)).makeAlive();
+        verify(cells[1][1], times(1)).makeAlive();
+    }
 }
