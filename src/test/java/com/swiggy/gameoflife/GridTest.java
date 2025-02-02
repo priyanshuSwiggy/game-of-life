@@ -163,5 +163,16 @@ public class GridTest {
         verify(cell11, never()).makeAlive();
     }
 
+    @Test
+    public void update_makesCellAliveWithExactlyThreeAliveNeighbors() {
+        when(cell00.isAlive()).thenReturn(false);
+        when(cell01.isAlive()).thenReturn(true);
+        when(cell10.isAlive()).thenReturn(true);
+        when(cell11.isAlive()).thenReturn(true);
 
+        grid.update();
+
+        verify(cell00, times(1)).makeAlive();
+        verify(cell00, never()).kill();
+    }
 }
