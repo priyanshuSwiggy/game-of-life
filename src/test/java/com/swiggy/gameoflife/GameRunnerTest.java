@@ -22,74 +22,57 @@ public class GameRunnerTest {
     @Mock
     private Scanner scanner;
 
-    private Cell[][] cell;
-
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        cell = new Cell[4][4];
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                cell[i][j] = mock(Cell.class);
-            }
-        }
     }
 
     @Test
     public void testStartGameSetSeedPercentage() {
-        grid = spy(new Grid(4, 4, cell));
-        gameRunner = spy(new GameRunner(grid, scanner));
+        doNothing().when(grid).randomSeeding(anyInt(), anyInt(), anyInt());
+        when(scanner.nextLine()).thenReturn("q");
 
         gameRunner.startGame(4, 4, 60);
-        grid.randomSeeding(4, 4, 60);
 
-        verify(grid, atLeastOnce()).randomSeeding(4, 4, 60);
+        verify(grid, times(1)).randomSeeding(4, 4, 60);
     }
 
     @Test
     public void testStartGameDisplayGrid() {
-        grid = spy(new Grid(4, 4, cell));
-        gameRunner = spy(new GameRunner(grid, scanner));
+        when(scanner.nextLine()).thenReturn("q");
 
         gameRunner.startGame(4, 4, 60);
-        grid.display();
 
         verify(grid, atLeastOnce()).display();
     }
 
     @Test
     public void testStartGame_exitsWhenAllCellsAreDead() {
-        grid = spy(new Grid(4, 4, cell));
-        gameRunner = spy(new GameRunner(grid, scanner));
+        when(grid.isAllDead()).thenReturn(true);
+        when(scanner.nextLine()).thenReturn("q");
 
-        doReturn(true).when(grid).isAllDead();
         gameRunner.startGame(4, 4, 60);
 
-        verify(grid, atLeastOnce()).display();
         verify(grid, times(1)).isAllDead();
     }
 
     @Test
     public void testStartGame_exitsOnUserQuit() {
-        grid = spy(new Grid(4, 4, cell));
-        gameRunner = spy(new GameRunner(grid, scanner));
-
-        doReturn("q").when(scanner).nextLine();
+        when(scanner.nextLine()).thenReturn("q");
 
         gameRunner.startGame(4, 4, 60);
 
-        verify(grid, atLeastOnce()).display();
+        verify(scanner, atLeastOnce()).nextLine();
     }
 
     @Test
     public void testStartGame_updateGrid() {
-        grid = spy(new Grid(4, 4, cell));
-        gameRunner = spy(new GameRunner(grid, scanner));
+        when(grid.isAllDead()).thenReturn(false);
+        when(scanner.nextLine()).thenReturn("q");
 
         gameRunner.startGame(4, 4, 60);
         grid.update();
 
-        verify(grid, atLeastOnce()).display();
         verify(grid, atLeastOnce()).update();
     }
 }

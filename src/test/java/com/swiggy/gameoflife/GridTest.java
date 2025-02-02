@@ -13,16 +13,19 @@ public class GridTest {
 
     @Mock
     private Cell cell00;
+
     @Mock
     private Cell cell01;
+
     @Mock
     private Cell cell10;
+
     @Mock
     private Cell cell11;
 
-    private Cell[][] cells;
-
     private Grid grid;
+
+    private Cell[][] cells;
 
     @Before
     public void setUp() {
@@ -70,39 +73,39 @@ public class GridTest {
     public void testRandomSeeding_setsCorrectNumberOfAliveCells() {
         grid.randomSeeding(2, 2, 50);
 
-        verify(cells[0][0], atMost(1)).makeAlive();
-        verify(cells[0][1], atMost(1)).makeAlive();
-        verify(cells[1][0], atMost(1)).makeAlive();
-        verify(cells[1][1], atMost(1)).makeAlive();
+        verify(cell00, atMost(1)).makeAlive();
+        verify(cell01, atMost(1)).makeAlive();
+        verify(cell10, atMost(1)).makeAlive();
+        verify(cell11, atMost(1)).makeAlive();
     }
 
     @Test
     public void testRandomSeeding_doesNotExceedGridBounds() {
         grid.randomSeeding(2, 2, 100);
 
-        verify(cells[0][1], atMost(1)).makeAlive();
-        verify(cells[0][0], atMost(1)).makeAlive();
-        verify(cells[1][0], atMost(1)).makeAlive();
-        verify(cells[1][1], atMost(1)).makeAlive();
+        verify(cell00, atMost(1)).makeAlive();
+        verify(cell01, atMost(1)).makeAlive();
+        verify(cell10, atMost(1)).makeAlive();
+        verify(cell11, atMost(1)).makeAlive();
     }
 
     @Test
     public void testRandomSeeding_handlesZeroPercentage() {
         grid.randomSeeding(2, 2, 0);
 
-        verify(cells[0][0], never()).makeAlive();
-        verify(cells[0][1], never()).makeAlive();
-        verify(cells[1][0], never()).makeAlive();
-        verify(cells[1][1], never()).makeAlive();
+        verify(cell00, never()).makeAlive();
+        verify(cell01, never()).makeAlive();
+        verify(cell10, never()).makeAlive();
+        verify(cell11, never()).makeAlive();
     }
 
     @Test
     public void testRandomSeeding_handlesFullPercentage() {
         grid.randomSeeding(2, 2, 100);
 
-        verify(cells[0][0], times(1)).makeAlive();
-        verify(cells[0][1], times(1)).makeAlive();
-        verify(cells[1][0], times(1)).makeAlive();
-        verify(cells[1][1], times(1)).makeAlive();
+        verify(cell00, times(1)).makeAlive();
+        verify(cell01, times(1)).makeAlive();
+        verify(cell10, times(1)).makeAlive();
+        verify(cell11, times(1)).makeAlive();
     }
 }

@@ -7,19 +7,37 @@ import java.util.Set;
 public class Grid {
     private final int m;
     private final int n;
-    private final Cell[][] cells;
+    private Cell[][] cells;
     private final Random random = new Random();
+
+    public Grid(int m, int n) {
+        this.m = m;
+        this.n = n;
+        this.cells = new Cell[m][n];
+        initializeCells();
+    }
 
     public Grid(int m, int n, Cell[][] cells) {
         this.m = m;
         this.n = n;
-        this.cells = cells;
+        this.cells = cells != null ? cells : new Cell[m][n];
+        if (cells == null) {
+            initializeCells();
+        }
+    }
+
+    private void initializeCells() {
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                cells[i][j] = new Cell();
+            }
+        }
     }
 
     public void display() {
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                System.out.print(cells[i][j].isAlive() ? CellState.ALIVE : CellState.DEAD);
+                System.out.print(cells[i][j].isAlive() ? CellState.ALIVE.getSymbol() : CellState.DEAD.getSymbol());
             }
             System.out.println();
         }
