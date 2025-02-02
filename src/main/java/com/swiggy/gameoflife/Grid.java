@@ -1,7 +1,6 @@
 package com.swiggy.gameoflife;
 
 import com.swiggy.gameoflife.exception.InvalidGridDimensionsException;
-import com.swiggy.gameoflife.exception.InvalidCellListException;
 import com.swiggy.gameoflife.exception.InvalidSeedPercentageException;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.Set;
 public class Grid {
     private final int rows;
     private final int cols;
-    private List<List<Cell>> cells;
+    List<List<Cell>> cells;
     private final Random random = new Random();
 
     public Grid(int rows, int cols) {
@@ -24,18 +23,6 @@ public class Grid {
         this.cols = cols;
         this.cells = new ArrayList<>();
         initializeGrid();
-    }
-
-    public Grid(int rows, int cols, List<List<Cell>> cells) {
-        if (rows <= 0 || cols <= 0) {
-            throw new InvalidGridDimensionsException();
-        }
-        if (cells == null || cells.isEmpty()) {
-            throw new InvalidCellListException();
-        }
-        this.rows = rows;
-        this.cols = cols;
-        this.cells = cells;
     }
 
     private void initializeGrid() {
@@ -51,9 +38,8 @@ public class Grid {
     public void display() {
         for (List<Cell> row : cells) {
             for (Cell cell : row) {
-                System.out.print(cell.printCell());
+                cell.printCell();
             }
-            System.out.println();
         }
     }
 

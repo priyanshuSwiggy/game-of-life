@@ -1,6 +1,5 @@
 package com.swiggy.gameoflife;
 
-import com.swiggy.gameoflife.exception.InvalidCellListException;
 import com.swiggy.gameoflife.exception.InvalidGridDimensionsException;
 import com.swiggy.gameoflife.exception.InvalidSeedPercentageException;
 import org.junit.Before;
@@ -11,7 +10,8 @@ import org.mockito.MockitoAnnotations;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class GridTest {
@@ -39,12 +39,18 @@ public class GridTest {
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+        grid = new Grid(3, 2);
         List<List<Cell>> cells = Arrays.asList(
                 Arrays.asList(cell00, cell01),
                 Arrays.asList(cell10, cell11),
                 Arrays.asList(cell20, cell21)
         );
-        grid = new Grid(3, 2, cells);
+        grid = new Grid(3, 2);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 2; j++) {
+                grid.cells.get(i).set(j, cells.get(i).get(j));
+            }
+        }
     }
 
     @Test
@@ -193,12 +199,7 @@ public class GridTest {
 
     @Test(expected = InvalidGridDimensionsException.class)
     public void testInvalidGridDimensionsException_ThrowsException_WhenDimensionsAreInvalid() {
-        new Grid(-1, 2, null);
-    }
-
-    @Test(expected = InvalidCellListException.class)
-    public void testInvalidCellListException_ThrowsException_WhenCellListIsNull() {
-        new Grid(3, 2, null);
+        new Grid(-1, 2);
     }
 
     @Test(expected = InvalidSeedPercentageException.class)

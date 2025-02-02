@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.mockito.Mock;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -13,9 +12,6 @@ import static org.junit.Assert.*;
 
 @RunWith(Parameterized.class)
 public class CellTest {
-
-    @Mock
-    private Cell cell;
 
     private Cell aliveCell;
     private Cell deadCell;
