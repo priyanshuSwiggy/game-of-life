@@ -90,7 +90,7 @@ public class Grid {
         int aliveCells = totalCells * seedPercentage / 100;
         Set<String> processedCells = new HashSet<>();
 
-        int i=0;
+        int i = 0;
         while (i < aliveCells) {
             int row = random.nextInt(m);
             int col = random.nextInt(n);

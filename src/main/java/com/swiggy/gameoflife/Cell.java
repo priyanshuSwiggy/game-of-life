@@ -27,11 +27,9 @@ public class Cell {
         if (shouldKill(aliveNeighbors)) {
             return new Cell(CellState.DEAD);
         }
-
         if (shouldRevive(aliveNeighbors)) {
             return new Cell(CellState.ALIVE);
         }
-
         return this;
     }
 

@@ -30,12 +30,10 @@ public class GridTest {
 
     private Grid grid;
 
-    private Cell[][] cells;
-
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        cells = new Cell[][]{{cell00, cell01}, {cell10, cell11}, {cell20, cell21}};
+        Cell[][] cells = new Cell[][]{{cell00, cell01}, {cell10, cell11}, {cell20, cell21}};
         grid = new Grid(3, 2, cells);
     }
 

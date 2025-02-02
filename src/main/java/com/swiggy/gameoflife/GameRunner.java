@@ -13,7 +13,7 @@ public class GameRunner {
 
     public void startGame(int m, int n, int seedPercentage) {
         grid.randomSeeding(m, n, seedPercentage);
-        while(true) {
+        while (true) {
             grid.display();
             if (grid.isAllDead() || "q".equalsIgnoreCase(scanner.nextLine())) {
                 break;
