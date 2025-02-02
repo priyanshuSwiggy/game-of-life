@@ -148,5 +148,20 @@ public class GridTest {
         verify(cell00, never()).makeAlive();
     }
 
+    @Test
+    public void update_killsCellWithFourOrMoreAliveNeighbors() {
+        when(cell00.isAlive()).thenReturn(true);
+        when(cell01.isAlive()).thenReturn(true);
+        when(cell10.isAlive()).thenReturn(true);
+        when(cell11.isAlive()).thenReturn(true);
+        when(cell20.isAlive()).thenReturn(true);
+        when(cell21.isAlive()).thenReturn(true);
+
+        grid.update();
+
+        verify(cell11, times(1)).kill();
+        verify(cell11, never()).makeAlive();
+    }
+
 
 }
