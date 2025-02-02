@@ -43,10 +43,10 @@ public class GridTest {
     public void testDisplay_showsMixedCells() {
         grid.display();
 
-        verify(cell00, times(1)).isAlive();
-        verify(cell01, times(1)).isAlive();
-        verify(cell10, times(1)).isAlive();
-        verify(cell11, times(1)).isAlive();
+        verify(cell00, times(1)).printCell();
+        verify(cell01, times(1)).printCell();
+        verify(cell10, times(1)).printCell();
+        verify(cell11, times(1)).printCell();
     }
 
     @Test
@@ -142,11 +142,15 @@ public class GridTest {
         when(cell10.isAlive()).thenReturn(false);
         when(cell11.isAlive()).thenReturn(false);
 
+        // Mock the next state for cell00 to be DEAD (killed).
+        when(cell00.nextState(0)).thenReturn(new Cell(CellState.DEAD));
+
         grid.update();
 
-        verify(cell00, times(1)).kill();
+        verify(cell00, times(1)).nextState(0);
         verify(cell00, never()).makeAlive();
     }
+
 
     @Test
     public void update_killsCellWithFourOrMoreAliveNeighbors() {
@@ -157,11 +161,14 @@ public class GridTest {
         when(cell20.isAlive()).thenReturn(true);
         when(cell21.isAlive()).thenReturn(true);
 
+        when(cell11.nextState(5)).thenReturn(new Cell(CellState.DEAD));
+
         grid.update();
 
-        verify(cell11, times(1)).kill();
+        verify(cell11, times(1)).nextState(5);
         verify(cell11, never()).makeAlive();
     }
+
 
     @Test
     public void update_makesCellAliveWithExactlyThreeAliveNeighbors() {
@@ -170,9 +177,12 @@ public class GridTest {
         when(cell10.isAlive()).thenReturn(true);
         when(cell11.isAlive()).thenReturn(true);
 
+        when(cell00.nextState(3)).thenReturn(new Cell(CellState.ALIVE));
+
         grid.update();
 
-        verify(cell00, times(1)).makeAlive();
+        verify(cell00, times(1)).nextState(3);
         verify(cell00, never()).kill();
     }
+
 }

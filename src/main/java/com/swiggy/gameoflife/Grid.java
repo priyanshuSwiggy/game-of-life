@@ -37,7 +37,7 @@ public class Grid {
     public void display() {
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                System.out.print(cells[i][j].isAlive() ? CellState.ALIVE.getSymbol() : CellState.DEAD.getSymbol());
+                System.out.print(cells[i][j].printCell());
             }
             System.out.println();
         }
@@ -58,21 +58,30 @@ public class Grid {
         Cell[][] nextGeneration = new Cell[m][n];
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                nextGeneration[i][j] = cells[i][j];
-                int aliveNeighbors = 3;
-
-                if (cells[i][j].isAlive()) {
-                    if (aliveNeighbors <= 1 || aliveNeighbors >= 4) {
-                        nextGeneration[i][j].kill();
-                    }
-                } else {
-                    if (aliveNeighbors == 3) {
-                        nextGeneration[i][j].makeAlive();
-                    }
-                }
+                nextGeneration[i][j] = cells[i][j].nextState(countAliveNeighbors(i, j));
             }
         }
         this.cells = nextGeneration;
+    }
+
+    private int countAliveNeighbors(int m, int n) {
+        int count = 0;
+        int[] directions = {-1, 0, 1};
+        for (int dr : directions) {
+            for (int dc : directions) {
+                if (dr == 0 && dc == 0) continue;
+                int row = m + dr;
+                int col = n + dc;
+                if (isWithinBoundary(row, col) && cells[row][col].isAlive()) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    private boolean isWithinBoundary(int row, int col) {
+        return row >= 0 && row < m && col >= 0 && col < n;
     }
 
 
