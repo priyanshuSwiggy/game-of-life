@@ -7,4 +7,7 @@ public class Grid {
     public boolean isAllDead() {
         return true;
     }
+
+    public void update() {
+    }
 }

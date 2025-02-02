@@ -19,6 +19,9 @@ public class GameRunnerTest {
     @Mock
     private Grid grid;
 
+    @Mock
+    private Scanner scanner;
+
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -27,7 +30,6 @@ public class GameRunnerTest {
     @Test
     public void testStartGameDisplayGrid() {
         grid = spy(new Grid());
-        Scanner scanner = mock(Scanner.class);
         gameRunner = spy(new GameRunner(grid, scanner));
 
         gameRunner.startGame(4, 4, 60);
@@ -39,7 +41,6 @@ public class GameRunnerTest {
     @Test
     public void testStartGame_exitsWhenAllCellsAreDead() {
         grid = spy(new Grid());
-        Scanner scanner = mock(Scanner.class);
         gameRunner = spy(new GameRunner(grid, scanner));
 
         doReturn(true).when(grid).isAllDead();
@@ -52,7 +53,6 @@ public class GameRunnerTest {
     @Test
     public void testStartGame_exitsOnUserQuit() {
         grid = spy(new Grid());
-        Scanner scanner = mock(Scanner.class);
         gameRunner = spy(new GameRunner(grid, scanner));
 
         doReturn("q").when(scanner).nextLine();
@@ -60,5 +60,17 @@ public class GameRunnerTest {
         gameRunner.startGame(4, 4, 60);
 
         verify(grid, atLeastOnce()).display();
+    }
+
+    @Test
+    public void testStartGame_updateGrid() {
+        grid = spy(new Grid());
+        gameRunner = spy(new GameRunner(grid, scanner));
+
+        gameRunner.startGame(4, 4, 60);
+        grid.update();
+
+        verify(grid, atLeastOnce()).display();
+        verify(grid, atLeastOnce()).update();
     }
 }
