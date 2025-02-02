@@ -1,7 +1,8 @@
 package com.swiggy.gameoflife;
 
 public class Cell {
+    private CellState state;
     public boolean isAlive() {
-        return true;
+        return state.equals(CellState.ALIVE);
     }
 }

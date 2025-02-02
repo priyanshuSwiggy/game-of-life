@@ -4,6 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class GridTest {
@@ -41,5 +44,25 @@ public class GridTest {
         verify(cell01, times(1)).isAlive();
         verify(cell10, times(1)).isAlive();
         verify(cell11, times(1)).isAlive();
+    }
+
+    @Test
+    public void testIsAllDead_returnsTrueWhenAllCellsAreDead() {
+        when(cell00.isAlive()).thenReturn(false);
+        when(cell01.isAlive()).thenReturn(false);
+        when(cell10.isAlive()).thenReturn(false);
+        when(cell11.isAlive()).thenReturn(false);
+
+        assertTrue(grid.isAllDead());
+    }
+
+    @Test
+    public void testIsAllDead_returnsFalseWhenAnyCellIsAlive() {
+        when(cell00.isAlive()).thenReturn(false);
+        when(cell01.isAlive()).thenReturn(true);
+        when(cell10.isAlive()).thenReturn(false);
+        when(cell11.isAlive()).thenReturn(false);
+
+        assertFalse(grid.isAllDead());
     }
 }
