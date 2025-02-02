@@ -29,4 +29,16 @@ public class CellTest {
         assertFalse(deadCell.isAlive());
     }
 
+    @Test
+    public void testMakeAlive_changesCellToAlive() {
+        deadCell.makeAlive();
+        assertTrue(deadCell.isAlive());
+    }
+
+    @Test
+    public void testKill_changesCellToDead() {
+        aliveCell.kill();
+        assertFalse(aliveCell.isAlive());
+    }
+
 }
