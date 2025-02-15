@@ -12,6 +12,13 @@ public class Location {
         this.isHabitable = isHabitable;
     }
 
+    public Location(int row, int col, boolean isHabitable, Cell cell) {
+        this.row = row;
+        this.col = col;
+        this.isHabitable = isHabitable;
+        this.cell = cell;
+    }
+
     public boolean isHabitable() {
         return this.isHabitable;
     }
