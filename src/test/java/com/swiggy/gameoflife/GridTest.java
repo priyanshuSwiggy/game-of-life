@@ -208,10 +208,23 @@ public class GridTest {
         List<List<Location>> dimensions = List.of(List.of(new Location(0, 0)));
         new Grid(1, -2, dimensions);
     }
-//
-//    @Test(expected = InvalidSeedPercentageException.class)
-//    public void testInvalidSeedPercentageException_ThrowsException_WhenSeedPercentageIsInvalid() {
-//        grid.seedRandomCells(2, 2, 150);
-//    }
+
+    @Test(expected = InvalidSeedPercentageException.class)
+    public void testInvalidSeedPercentageException_ThrowsException_WhenSeedPercentageIsLessThan0() {
+        List<List<Location>> dimensions = List.of(
+                List.of(new Location(0, 0), new Location(0, 1)),
+                List.of(new Location(1, 0), new Location(1, 1)));
+        Grid grid = new Grid(2, 2, dimensions);
+        grid.seedRandomCells(2, 2, -1);
+    }
+
+    @Test(expected = InvalidSeedPercentageException.class)
+    public void testInvalidSeedPercentageException_ThrowsException_WhenSeedPercentageIsGreaterThan100() {
+        List<List<Location>> dimensions = List.of(
+                List.of(new Location(0, 0), new Location(0, 1)),
+                List.of(new Location(1, 0), new Location(1, 1)));
+        Grid grid = new Grid(2, 2, dimensions);
+        grid.seedRandomCells(2, 2, 150);
+    }
 
 }

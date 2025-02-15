@@ -125,7 +125,7 @@ public class Grid {
         checkValidGridDimensions(rows, cols);
         this.rows = rows;
         this.cols = cols;
-        this.dimensions = dimensions;
+        this.dimensions = new ArrayList<>();
         initializeGrid();
     }
 
@@ -140,13 +140,20 @@ public class Grid {
     }
 
     public void seedRandomCells(int rows, int cols, int seedPercentage) {
+        checkValidSeedPercentage(seedPercentage);
     }
 
-    private static void checkValidGridDimensions(int rows, int cols) {
+    private void checkValidGridDimensions(int rows, int cols) {
         if (rows <= 0 || cols <= 0) {
             throw new InvalidGridDimensionsException();
         }
     }
+
+        private void checkValidSeedPercentage(int seedPercentage) {
+            if (seedPercentage < 0 || seedPercentage > 100) {
+                throw new InvalidSeedPercentageException();
+            }
+        }
 
     public void display() {
         for (List<Location> locationList : dimensions) {
