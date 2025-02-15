@@ -28,7 +28,7 @@ public class GameRunnerTest {
 
     @Test
     public void testStartGame_SetSeedPercentage() {
-        doNothing().when(grid).seedRandomCells(anyInt(), anyInt(), anyInt());
+        doNothing().when(grid).seedRandomCells(4, 4, 60);
         when(scanner.nextLine()).thenReturn("q");
 
         gameRunner.startGame(4, 4, 60);

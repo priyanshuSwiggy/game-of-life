@@ -11,7 +11,7 @@ public class Cell {
         return this.state == CellState.ALIVE;
     }
 
-    public void makeAlive() {
+    public void revive() {
         this.state = CellState.ALIVE;
     }
 

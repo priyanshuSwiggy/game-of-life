@@ -2,28 +2,13 @@ package com.swiggy.gameoflife;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-
-import java.util.Arrays;
-import java.util.Collection;
 
 import static org.junit.Assert.*;
 
-@RunWith(Parameterized.class)
 public class CellTest {
 
     private Cell aliveCell;
     private Cell deadCell;
-    private final Cell initialCell;
-    private final int aliveNeighbors;
-    private final boolean expectedAliveState;
-
-    public CellTest(Cell initialCell, int aliveNeighbors, boolean expectedAliveState) {
-        this.initialCell = initialCell;
-        this.aliveNeighbors = aliveNeighbors;
-        this.expectedAliveState = expectedAliveState;
-    }
 
     @Before
     public void setUp() {
@@ -42,8 +27,9 @@ public class CellTest {
     }
 
     @Test
-    public void testMakeAlive_ChangesCellToAlive() {
-        deadCell.makeAlive();
+    public void testRevive_ChangesCellToAlive() {
+        deadCell.revive();
+
         assertTrue(deadCell.isAlive());
     }
 
@@ -53,36 +39,44 @@ public class CellTest {
         assertFalse(aliveCell.isAlive());
     }
 
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
-                {new Cell(CellState.ALIVE), 0, false},
-                {new Cell(CellState.ALIVE), 1, false},
-                {new Cell(CellState.ALIVE), 4, false},
-                {new Cell(CellState.ALIVE), 5, false}
-        });
+    @Test
+    public void testNextState_KillsAliveCell_WithZeroAliveNeighbors() {
+        Cell nextState = aliveCell.nextState(0);
+        assertFalse(nextState.isAlive());
     }
 
     @Test
-    public void testNextState_KillsCellWithInvalidAliveNeighbors() {
-        Cell nextState = initialCell.nextState(aliveNeighbors);
-        assertEquals(expectedAliveState, nextState.isAlive());
+    public void testNextState_KillsAliveCell_WithOneAliveNeighbor() {
+        Cell nextState = aliveCell.nextState(1);
+        assertFalse(nextState.isAlive());
     }
 
     @Test
-    public void testNextState_RevivesCellWithExactlyThreeAliveNeighbors() {
+    public void testNextState_KillsAliveCell_WithFourAliveNeighbors() {
+        Cell nextState = aliveCell.nextState(4);
+        assertFalse(nextState.isAlive());
+    }
+
+    @Test
+    public void testNextState_KillsAliveCell_WithFiveAliveNeighbors() {
+        Cell nextState = aliveCell.nextState(5);
+        assertFalse(nextState.isAlive());
+    }
+
+    @Test
+    public void testNextState_RevivesDeadCell_WithExactlyThreeAliveNeighbors() {
         Cell nextState = deadCell.nextState(3);
         assertTrue(nextState.isAlive());
     }
 
     @Test
-    public void testNextState_DoesNotChangeCellWithTwoAliveNeighbors() {
+    public void testNextState_DoesNotChangeAliveCell_WithTwoAliveNeighbors() {
         Cell nextState = aliveCell.nextState(2);
         assertTrue(nextState.isAlive());
     }
 
     @Test
-    public void testNextState_DoesNotChangeCellWithThreeAliveNeighbors() {
+    public void testNextState_DoesNotChangeAliveCell_WithThreeAliveNeighbors() {
         Cell nextState = aliveCell.nextState(3);
         assertTrue(nextState.isAlive());
     }
