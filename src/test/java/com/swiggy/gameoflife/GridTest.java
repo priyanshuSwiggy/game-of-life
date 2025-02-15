@@ -290,4 +290,15 @@ public class GridTest {
         verify(location21, atMostOnce()).makeHabitable();
     }
 
+    @Test
+    public void testUpdate_CallsUpdateStateOnAllLocations() {
+        grid.update();
+
+        verify(location00, times(1)).updateState();
+        verify(location01, times(1)).updateState();
+        verify(location10, times(1)).updateState();
+        verify(location11, times(1)).updateState();
+        verify(location20, times(1)).updateState();
+        verify(location21, times(1)).updateState();
+    }
 }

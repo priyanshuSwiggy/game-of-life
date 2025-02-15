@@ -23,4 +23,8 @@ public class Location {
     public boolean isOccupied() {
         return this.cell != null;
     }
+
+    public void updateState() {
+
+    }
 }

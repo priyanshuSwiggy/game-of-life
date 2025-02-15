@@ -195,5 +195,10 @@ public class Grid {
     }
 
     public void update() {
+        for (List<Location> row : dimensions) {
+            for (Location location : row) {
+                location.updateState();
+            }
+        }
     }
 }
