@@ -4,17 +4,52 @@ import com.swiggy.gameoflife.exception.InvalidGridDimensionsException;
 import com.swiggy.gameoflife.exception.InvalidSeedPercentageException;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class GridTest {
+
+    private Grid grid;
+
+    @Mock
+    private Location location00;
+
+    @Mock
+    private Location location01;
+
+    @Mock
+    private Location location10;
+
+    @Mock
+    private Location location11;
+
+    @Mock
+    private Location location20;
+
+    @Mock
+    private Location location21;
+
+    private List<List<Location>> dimensions;
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        dimensions = List.of(
+                List.of(location00, location01),
+                List.of(location10, location11),
+                List.of(location20, location21)
+        );
+        grid = new Grid(3, 2, dimensions);
+    }
 //
 //    @Mock
 //    private Cell cell00;
@@ -199,32 +234,60 @@ public class GridTest {
 //
     @Test(expected = InvalidGridDimensionsException.class)
     public void testInvalidGridDimensionsException_ThrowsException_WhenRowIsNonPositive() {
-        List<List<Location>> dimensions = List.of(List.of(new Location(0, 0)));
-        new Grid(-1, 2, dimensions);
+        new Grid(-1, 2);
     }
 
     @Test(expected = InvalidGridDimensionsException.class)
     public void testInvalidGridDimensionsException_ThrowsException_WhenColumnIsNonPositive() {
-        List<List<Location>> dimensions = List.of(List.of(new Location(0, 0)));
-        new Grid(1, -2, dimensions);
+        new Grid(1, -2);
     }
 
     @Test(expected = InvalidSeedPercentageException.class)
     public void testInvalidSeedPercentageException_ThrowsException_WhenSeedPercentageIsLessThan0() {
-        List<List<Location>> dimensions = List.of(
-                List.of(new Location(0, 0), new Location(0, 1)),
-                List.of(new Location(1, 0), new Location(1, 1)));
-        Grid grid = new Grid(2, 2, dimensions);
         grid.seedRandomCells(2, 2, -1);
     }
 
     @Test(expected = InvalidSeedPercentageException.class)
     public void testInvalidSeedPercentageException_ThrowsException_WhenSeedPercentageIsGreaterThan100() {
-        List<List<Location>> dimensions = List.of(
-                List.of(new Location(0, 0), new Location(0, 1)),
-                List.of(new Location(1, 0), new Location(1, 1)));
-        Grid grid = new Grid(2, 2, dimensions);
         grid.seedRandomCells(2, 2, 150);
+    }
+
+    @Test
+    public void testSeedRandomCells_SetsCorrectNumberOfHabitableLocations_WhenSeedPercentageIs50() {
+        when(location00.isOccupied()).thenReturn(true);
+        when(location01.isOccupied()).thenReturn(true);
+        when(location10.isOccupied()).thenReturn(true);
+        when(location11.isOccupied()).thenReturn(false);
+        when(location20.isOccupied()).thenReturn(false);
+        when(location21.isOccupied()).thenReturn(false);
+
+        grid.seedRandomCells(3, 2, 50);
+
+        verify(location00, never()).makeHabitable();
+        verify(location01, never()).makeHabitable();
+        verify(location10, never()).makeHabitable();
+        verify(location11, times(1)).makeHabitable();
+        verify(location20, times(1)).makeHabitable();
+        verify(location21, times(1)).makeHabitable();
+    }
+
+    @Test
+    public void testSeedRandomCells_SetsCorrectNumberOfHabitableLocations_WhenSeedPercentageIs30() {
+        when(location00.isOccupied()).thenReturn(false);
+        when(location01.isOccupied()).thenReturn(false);
+        when(location10.isOccupied()).thenReturn(true);
+        when(location11.isOccupied()).thenReturn(false);
+        when(location20.isOccupied()).thenReturn(false);
+        when(location21.isOccupied()).thenReturn(false);
+
+        grid.seedRandomCells(3, 2, 30);
+
+        verify(location00, atMostOnce()).makeHabitable();
+        verify(location01, atMostOnce()).makeHabitable();
+        verify(location10, never()).makeHabitable();
+        verify(location11, atMostOnce()).makeHabitable();
+        verify(location20, atMostOnce()).makeHabitable();
+        verify(location21, atMostOnce()).makeHabitable();
     }
 
 }

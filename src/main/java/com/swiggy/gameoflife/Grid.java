@@ -120,8 +120,9 @@ public class Grid {
     private final int rows;
     private final int cols;
     private final List<List<Location>> dimensions;
+    private final Random random = new Random();
 
-    public Grid(int rows, int cols, List<List<Location>> dimensions) {
+    public Grid(int rows, int cols) {
         checkValidGridDimensions(rows, cols);
         this.rows = rows;
         this.cols = cols;
@@ -129,18 +130,43 @@ public class Grid {
         initializeGrid();
     }
 
+    public Grid(int rows, int cols, List<List<Location>> dimensions) {
+        checkValidGridDimensions(rows, cols);
+        this.rows = rows;
+        this.cols = cols;
+        this.dimensions = dimensions;
+    }
+
     private void initializeGrid() {
         for (int i = 0; i < rows; i++) {
-            List<Location> row = new ArrayList<>();
+            List<Location> locations = new ArrayList<>();
             for (int j = 0; j < cols; j++) {
-                row.add(new Location(i, j));
+                locations.add(new Location(i, j, false));
             }
-            dimensions.add(row);
+            dimensions.add(locations);
         }
     }
 
     public void seedRandomCells(int rows, int cols, int seedPercentage) {
         checkValidSeedPercentage(seedPercentage);
+        int dimension = rows * cols;
+        int habitableLocation = dimension * seedPercentage / 100;
+        Set<String> processedLocation = new HashSet<>();
+
+        int i =0;
+        while(i<habitableLocation){
+            int row = random.nextInt(rows);
+            int col = random.nextInt(cols);
+            String locationKey = row + "," + col;
+
+            Location location = dimensions.get(row).get(col);
+            if(!processedLocation.contains(locationKey) && !location.isOccupied()){
+                location.makeHabitable();
+                new Cell(location);
+                processedLocation.add(locationKey);
+                i++;
+            }
+        }
     }
 
     private void checkValidGridDimensions(int rows, int cols) {
@@ -149,15 +175,15 @@ public class Grid {
         }
     }
 
-        private void checkValidSeedPercentage(int seedPercentage) {
-            if (seedPercentage < 0 || seedPercentage > 100) {
-                throw new InvalidSeedPercentageException();
-            }
+    private void checkValidSeedPercentage(int seedPercentage) {
+        if (seedPercentage <= 0 || seedPercentage >= 100) {
+            throw new InvalidSeedPercentageException();
         }
+    }
 
     public void display() {
-        for (List<Location> locationList : dimensions) {
-            for (Location location : locationList) {
+        for (List<Location> locations : dimensions) {
+            for (Location location : locations) {
                 System.out.print(location);
             }
             System.out.println();

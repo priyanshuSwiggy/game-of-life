@@ -3,10 +3,24 @@ package com.swiggy.gameoflife;
 public class Location {
     private final int row;
     private final int col;
+    private boolean isHabitable;
+    private Cell cell;
 
-    public Location(int row, int col) {
+    public Location(int row, int col, boolean isHabitable) {
         this.row = row;
         this.col = col;
+        this.isHabitable = isHabitable;
     }
 
+    public boolean isHabitable() {
+        return this.isHabitable;
+    }
+
+    public void makeHabitable() {
+        this.isHabitable = true;
+    }
+
+    public boolean isOccupied() {
+        return this.cell != null;
+    }
 }
