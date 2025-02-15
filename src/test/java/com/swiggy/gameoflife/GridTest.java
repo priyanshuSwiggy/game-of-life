@@ -197,10 +197,17 @@ public class GridTest {
 //        verify(cell00, never()).kill();
 //    }
 //
-//    @Test(expected = InvalidGridDimensionsException.class)
-//    public void testInvalidGridDimensionsException_ThrowsException_WhenDimensionsAreInvalid() {
-//        new Grid(-1, 2);
-//    }
+    @Test(expected = InvalidGridDimensionsException.class)
+    public void testInvalidGridDimensionsException_ThrowsException_WhenRowIsNonPositive() {
+        List<List<Location>> dimensions = List.of(List.of(new Location(0, 0)));
+        new Grid(-1, 2, dimensions);
+    }
+
+    @Test(expected = InvalidGridDimensionsException.class)
+    public void testInvalidGridDimensionsException_ThrowsException_WhenColumnIsNonPositive() {
+        List<List<Location>> dimensions = List.of(List.of(new Location(0, 0)));
+        new Grid(1, -2, dimensions);
+    }
 //
 //    @Test(expected = InvalidSeedPercentageException.class)
 //    public void testInvalidSeedPercentageException_ThrowsException_WhenSeedPercentageIsInvalid() {

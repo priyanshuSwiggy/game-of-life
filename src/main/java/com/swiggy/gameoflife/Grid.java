@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class Grid {
 
-//    private final int rows;
+    //    private final int rows;
 //    private final int cols;
 //    List<List<Cell>> cells;
 //    private final Random random = new Random();
@@ -122,6 +122,7 @@ public class Grid {
     private final List<List<Location>> dimensions;
 
     public Grid(int rows, int cols, List<List<Location>> dimensions) {
+        checkValidGridDimensions(rows, cols);
         this.rows = rows;
         this.cols = cols;
         this.dimensions = dimensions;
@@ -129,9 +130,9 @@ public class Grid {
     }
 
     private void initializeGrid() {
-        for (int i=0; i<rows; i++) {
+        for (int i = 0; i < rows; i++) {
             List<Location> row = new ArrayList<>();
-            for (int j=0; j<cols; j++) {
+            for (int j = 0; j < cols; j++) {
                 row.add(new Location(i, j));
             }
             dimensions.add(row);
@@ -141,9 +142,15 @@ public class Grid {
     public void seedRandomCells(int rows, int cols, int seedPercentage) {
     }
 
+    private static void checkValidGridDimensions(int rows, int cols) {
+        if (rows <= 0 || cols <= 0) {
+            throw new InvalidGridDimensionsException();
+        }
+    }
+
     public void display() {
-        for(List<Location> locationList : dimensions) {
-            for(Location location : locationList) {
+        for (List<Location> locationList : dimensions) {
+            for (Location location : locationList) {
                 System.out.print(location);
             }
             System.out.println();
