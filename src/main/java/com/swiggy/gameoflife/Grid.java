@@ -191,12 +191,19 @@ public class Grid {
     }
 
     public boolean areAllCellsDead() {
+        for (List<Location> locations : dimensions) {
+            for (Location location : locations) {
+                if (location.isHabitable()) {
+                    return false;
+                }
+            }
+        }
         return true;
     }
 
     public void update() {
-        for (List<Location> row : dimensions) {
-            for (Location location : row) {
+        for (List<Location> locations : dimensions) {
+            for (Location location : locations) {
                 location.updateState();
             }
         }

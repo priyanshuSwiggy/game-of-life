@@ -291,7 +291,7 @@ public class GridTest {
     }
 
     @Test
-    public void testUpdate_CallsUpdateStateOnAllLocations() {
+    public void testUpdate_CallsUpdateStateOnAllLocations_WhenCalled() {
         grid.update();
 
         verify(location00, times(1)).updateState();
@@ -300,5 +300,29 @@ public class GridTest {
         verify(location11, times(1)).updateState();
         verify(location20, times(1)).updateState();
         verify(location21, times(1)).updateState();
+    }
+
+    @Test
+    public void testAreAllCellsDead_ReturnsTrue_WhenAllLocationsAreNotHabitable() {
+        when(location00.isHabitable()).thenReturn(false);
+        when(location01.isHabitable()).thenReturn(false);
+        when(location10.isHabitable()).thenReturn(false);
+        when(location11.isHabitable()).thenReturn(false);
+        when(location20.isHabitable()).thenReturn(false);
+        when(location21.isHabitable()).thenReturn(false);
+
+        assertTrue(grid.areAllCellsDead());
+    }
+
+    @Test
+    public void testAreAllCellsDead_ReturnsFalse_WhenAnyLocationIsHabitable() {
+        when(location00.isHabitable()).thenReturn(false);
+        when(location01.isHabitable()).thenReturn(true);
+        when(location10.isHabitable()).thenReturn(false);
+        when(location11.isHabitable()).thenReturn(false);
+        when(location20.isHabitable()).thenReturn(false);
+        when(location21.isHabitable()).thenReturn(false);
+
+        assertFalse(grid.areAllCellsDead());
     }
 }
