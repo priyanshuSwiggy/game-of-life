@@ -4,11 +4,14 @@ import com.swiggy.gameoflife.exception.InvalidGridDimensionsException;
 import com.swiggy.gameoflife.exception.InvalidSeedPercentageException;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.*;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -37,6 +40,9 @@ public class GridTest {
 
     private Map<String, Boolean> occupiedLocations;
 
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private final PrintStream originalOut = System.out;
+
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -47,6 +53,7 @@ public class GridTest {
         );
         occupiedLocations = new HashMap<>();
         grid = new Grid(3, 2, dimensions, occupiedLocations);
+        System.setOut(new PrintStream(outContent));
     }
     @Test(expected = InvalidGridDimensionsException.class)
     public void testInvalidGridDimensionsException_ThrowsException_WhenRowIsNonPositive() {
@@ -140,5 +147,50 @@ public class GridTest {
         when(location21.isHabitable()).thenReturn(false);
 
         assertFalse(grid.areAllCellsDead());
+    }
+
+    @Test
+    public void testDisplay_PrintsCorrectRepresentation_WhenAllLocationsAreOccupied() {
+        when(location00.isOccupied()).thenReturn(true);
+        when(location01.isOccupied()).thenReturn(true);
+        when(location10.isOccupied()).thenReturn(true);
+        when(location11.isOccupied()).thenReturn(true);
+        when(location20.isOccupied()).thenReturn(true);
+        when(location21.isOccupied()).thenReturn(true);
+
+        grid.display();
+
+        String expectedOutput = "**\n**\n**\n";
+        assertEquals(expectedOutput, outContent.toString());
+    }
+
+    @Test
+    public void testDisplay_PrintsCorrectRepresentation_WhenNoLocationsAreOccupied() {
+        when(location00.isOccupied()).thenReturn(false);
+        when(location01.isOccupied()).thenReturn(false);
+        when(location10.isOccupied()).thenReturn(false);
+        when(location11.isOccupied()).thenReturn(false);
+        when(location20.isOccupied()).thenReturn(false);
+        when(location21.isOccupied()).thenReturn(false);
+
+        grid.display();
+
+        String expectedOutput = "__\n__\n__\n";
+        assertEquals(expectedOutput, outContent.toString());
+    }
+
+    @Test
+    public void testDisplay_PrintsCorrectRepresentation_WhenSomeLocationsAreOccupied() {
+        when(location00.isOccupied()).thenReturn(true);
+        when(location01.isOccupied()).thenReturn(false);
+        when(location10.isOccupied()).thenReturn(true);
+        when(location11.isOccupied()).thenReturn(false);
+        when(location20.isOccupied()).thenReturn(true);
+        when(location21.isOccupied()).thenReturn(false);
+
+        grid.display();
+
+        String expectedOutput = "*_\n*_\n*_\n";
+        assertEquals(expectedOutput, outContent.toString());
     }
 }

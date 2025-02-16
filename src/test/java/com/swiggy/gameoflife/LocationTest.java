@@ -37,6 +37,21 @@ public class LocationTest {
     }
 
     @Test
+    public void testUpdateState_SetsLocationAsNotHabitable_WhenOccupiedAndHasZeroNeighbors() {
+        Map<String, Boolean> occupiedLocations = new HashMap<>();
+        Location location00 = new Location(0, 0, true);
+        Cell cell00 = new Cell(location00);
+        location00 = new Location(0, 0, true, cell00);
+        occupiedLocations.put("0,0", true);
+
+        Location location11 = new Location(1, 1, false);
+        location00.updateState(occupiedLocations, 3, 3);
+
+        assertFalse(location00.isHabitable());
+        assertFalse(location00.isOccupied());
+    }
+
+    @Test
     public void testUpdateState_SetsLocationAsNotHabitable_WhenOccupiedAndHasOneNeighbor() {
         Map<String, Boolean> occupiedLocations = new HashMap<>();
         Location location00 = new Location(0, 0, true);
@@ -44,7 +59,10 @@ public class LocationTest {
         location00 = new Location(0, 0, true, cell00);
         occupiedLocations.put("0,0", true);
 
-        Location location01 = new Location(0, 1, false);
+        Location location01 = new Location(0, 1, true);
+        Cell cell01 = new Cell(location00);
+        location00 = new Location(0, 1, true, cell01);
+        occupiedLocations.put("0,1", true);
 
         Location location10 = new Location(1, 0, false);
 
@@ -54,10 +72,10 @@ public class LocationTest {
 
         Location location21 = new Location(2, 1, false);
 
-        location11.updateState(occupiedLocations, 3, 2);
+        location00.updateState(occupiedLocations, 3, 2);
 
-        assertFalse(location11.isHabitable());
-        assertFalse(location11.isOccupied());
+        assertFalse(location00.isHabitable());
+        assertFalse(location00.isOccupied());
     }
 
     @Test
@@ -78,7 +96,46 @@ public class LocationTest {
         location10 = new Location(1, 0, true, cell10);
         occupiedLocations.put("1,0", true);
 
-        Location location11 = new Location(1, 1, false);
+        Location location11 = new Location(1, 1, true);
+        Cell cell11 = new Cell(location11);
+        location11 = new Location(1, 1, true, cell11);
+        occupiedLocations.put("1,1", true);
+
+        Location location20 = new Location(2, 0, true);
+        Cell cell20 = new Cell(location20);
+        location20 = new Location(2, 0, true, cell20);
+        occupiedLocations.put("2,0", true);
+
+        Location location21 = new Location(2, 1, false);
+
+        location11.updateState(occupiedLocations, 3, 2);
+
+        assertFalse(location11.isHabitable());
+        assertFalse(location11.isOccupied());
+    }
+
+    @Test
+    public void testUpdateState_SetsLocationAsNotHabitable_WhenOccupiedAndHasFiveNeighbors() {
+        Map<String, Boolean> occupiedLocations = new HashMap<>();
+        Location location00 = new Location(0, 0, true);
+        Cell cell00 = new Cell(location00);
+        location00 = new Location(0, 0, true, cell00);
+        occupiedLocations.put("0,0", true);
+
+        Location location01 = new Location(0, 1, true);
+        Cell cell01 = new Cell(location01);
+        location01 = new Location(0, 1, true, cell01);
+        occupiedLocations.put("0,1", true);
+
+        Location location10 = new Location(1, 0, true);
+        Cell cell10 = new Cell(location10);
+        location10 = new Location(1, 0, true, cell10);
+        occupiedLocations.put("1,0", true);
+
+        Location location11 = new Location(1, 1, true);
+        Cell cell11 = new Cell(location11);
+        location11 = new Location(1, 1, true, cell11);
+        occupiedLocations.put("1,1", true);
 
         Location location20 = new Location(2, 0, true);
         Cell cell20 = new Cell(location20);

@@ -39,7 +39,8 @@ public class Location {
             this.isHabitable = false;
             occupiedLocations.put(rows+","+cols, false);
             this.cell = null;
-        } else if (!isOccupied() && count == 3) {
+        }
+        if (!isOccupied() && count == 3) {
             this.isHabitable = true;
             occupiedLocations.put(row+","+col, true);
             this.cell = new Cell(this);

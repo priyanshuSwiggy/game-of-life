@@ -2,6 +2,7 @@ package com.swiggy.gameoflife;
 
 import com.swiggy.gameoflife.exception.InvalidGridDimensionsException;
 import com.swiggy.gameoflife.exception.InvalidSeedPercentageException;
+import com.swiggy.gameoflife.exception.NeverEndingCycleException;
 
 import java.util.*;
 
@@ -11,6 +12,7 @@ public class Grid {
     private final List<List<Location>> dimensions;
     private final Map<String, Boolean> occupiedLocations;
     private final Random random = new Random();
+    private final Map<String, Integer> stateHistory = new HashMap<>();
 
     public Grid(int rows, int cols) {
         checkValidGridDimensions(rows, cols);
@@ -98,10 +100,27 @@ public class Grid {
     }
 
     public void update(int rows, int cols) {
+        String currentState = getCurrentState();
+        stateHistory.put(currentState, stateHistory.getOrDefault(currentState, 0) + 1);
+
+        if (stateHistory.get(currentState) >= 3) {
+            throw new NeverEndingCycleException();
+        }
         for (List<Location> locations : dimensions) {
             for (Location location : locations) {
                 location.updateState(occupiedLocations, rows, cols);
             }
         }
+    }
+
+    private String getCurrentState() {
+        StringBuilder stateBuilder = new StringBuilder();
+        for (List<Location> locations : dimensions) {
+            for (Location location : locations) {
+                stateBuilder.append(location.isOccupied() ? "*" : "_");
+            }
+            stateBuilder.append("\n");
+        }
+        return stateBuilder.toString();
     }
 }
