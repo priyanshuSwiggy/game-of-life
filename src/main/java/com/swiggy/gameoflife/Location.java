@@ -1,6 +1,5 @@
 package com.swiggy.gameoflife;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class Location {

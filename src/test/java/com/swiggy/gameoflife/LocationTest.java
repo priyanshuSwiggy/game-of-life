@@ -124,4 +124,78 @@ public class LocationTest {
         assertTrue(location11.isOccupied());
     }
 
+    @Test
+    public void testUpdateState_CountsOccupiedNeighborsCorrectly_WhenNeighborsAreOccupied() {
+        Map<String, Boolean> occupiedLocations = new HashMap<>();
+        Location location00 = new Location(0, 0, true);
+        Cell cell00 = new Cell(location00);
+        location00 = new Location(0, 0, true, cell00);
+        occupiedLocations.put("0,0", true);
+
+        Location location01 = new Location(0, 1, true);
+        Cell cell01 = new Cell(location01);
+        location01 = new Location(0, 1, true, cell01);
+        occupiedLocations.put("0,1", true);
+
+        Location location10 = new Location(1, 0, true);
+        Cell cell10 = new Cell(location10);
+        location10 = new Location(1, 0, true, cell10);
+        occupiedLocations.put("1,0", true);
+
+        Location location11 = new Location(1, 1, false);
+        location11.updateState(occupiedLocations, 3, 3);
+
+        assertTrue(location11.isHabitable());
+        assertTrue(location11.isOccupied());
+    }
+
+    @Test
+    public void testUpdateState_DoesNotCountOutOfBoundsNeighbors_WhenLocationIsAtEdge() {
+        Map<String, Boolean> occupiedLocations = new HashMap<>();
+        Location location00 = new Location(0, 0, true);
+        Cell cell00 = new Cell(location00);
+        location00 = new Location(0, 0, true, cell00);
+        occupiedLocations.put("0,0", true);
+
+        Location location01 = new Location(0, 1, true);
+        Cell cell01 = new Cell(location01);
+        location01 = new Location(0, 1, true, cell01);
+        occupiedLocations.put("0,1", true);
+
+        Location location10 = new Location(1, 0, true);
+        Cell cell10 = new Cell(location10);
+        location10 = new Location(1, 0, true, cell10);
+        occupiedLocations.put("1,0", true);
+
+        Location location11 = new Location(1, 1, false);
+        location11.updateState(occupiedLocations, 2, 2);
+
+        assertTrue(location11.isHabitable());
+        assertTrue(location11.isOccupied());
+    }
+
+    @Test
+    public void testUpdateState_DoesNotCountOutOfBoundsNeighbors_WhenLocationIsOutOfBounds() {
+        Map<String, Boolean> occupiedLocations = new HashMap<>();
+        Location location00 = new Location(0, 0, true);
+        Cell cell00 = new Cell(location00);
+        location00 = new Location(0, 0, true, cell00);
+        occupiedLocations.put("0,0", true);
+
+        Location location01 = new Location(0, 1, true);
+        Cell cell01 = new Cell(location01);
+        location01 = new Location(0, 1, true, cell01);
+        occupiedLocations.put("0,1", true);
+
+        Location location10 = new Location(1, 0, true);
+        Cell cell10 = new Cell(location10);
+        location10 = new Location(1, 0, true, cell10);
+        occupiedLocations.put("1,0", true);
+
+        Location location11 = new Location(1, 1, false);
+        location11.updateState(occupiedLocations, 1, 1);
+
+        assertFalse(location11.isHabitable());
+        assertFalse(location11.isOccupied());
+    }
 }
