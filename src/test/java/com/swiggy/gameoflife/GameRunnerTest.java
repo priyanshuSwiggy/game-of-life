@@ -27,7 +27,7 @@ public class GameRunnerTest {
     }
 
     @Test
-    public void testStartGame_SetSeedPercentage() {
+    public void testStartGame_SetSeedPercentage_WhenCalled() {
         doNothing().when(grid).seedRandomCells(4, 4, 60);
         when(scanner.nextLine()).thenReturn("q");
 
@@ -37,7 +37,7 @@ public class GameRunnerTest {
     }
 
     @Test
-    public void testStartGame_DisplayGrid() {
+    public void testStartGame_DisplayGrid_WhenCalled() {
         when(scanner.nextLine()).thenReturn("q");
 
         gameRunner.startGame(4, 4, 60);
@@ -46,9 +46,8 @@ public class GameRunnerTest {
     }
 
     @Test
-    public void testStartGame_ExitsWhenAllCellsAreDead() {
+    public void testStartGame_Exits_WhenAllCellsAreDead() {
         when(grid.areAllCellsDead()).thenReturn(true);
-        when(scanner.nextLine()).thenReturn("q");
 
         gameRunner.startGame(4, 4, 60);
 
@@ -56,7 +55,7 @@ public class GameRunnerTest {
     }
 
     @Test
-    public void testStartGame_ExitsOnUserQuit() {
+    public void testStartGame_Exits_WhenUserQuit() {
         when(scanner.nextLine()).thenReturn("q");
 
         gameRunner.startGame(4, 4, 60);
@@ -65,12 +64,10 @@ public class GameRunnerTest {
     }
 
     @Test
-    public void testStartGame_UpdateGrid() {
-        when(grid.areAllCellsDead()).thenReturn(false);
-        when(scanner.nextLine()).thenReturn("q");
+    public void testStartGame_UpdateGrid_WhenCalled() {
+        when(grid.areAllCellsDead()).thenReturn(false).thenReturn(true);
 
         gameRunner.startGame(4, 4, 60);
-        grid.update(4, 4);
 
         verify(grid, atLeastOnce()).update(4, 4);
     }

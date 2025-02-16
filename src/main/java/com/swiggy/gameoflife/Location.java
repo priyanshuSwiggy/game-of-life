@@ -1,6 +1,7 @@
 package com.swiggy.gameoflife;
 
-import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 public class Location {
     private final int row;
@@ -14,11 +15,9 @@ public class Location {
         this.isHabitable = isHabitable;
     }
 
-    public Location(int row, int col, boolean isHabitable, Cell cell) {
+    public Location(int row, int col) {
         this.row = row;
         this.col = col;
-        this.isHabitable = isHabitable;
-        this.cell = cell;
     }
 
     public boolean isHabitable() {
@@ -27,27 +26,28 @@ public class Location {
 
     public void makeHabitable() {
         this.isHabitable = true;
+        this.cell = new Cell(this);
     }
 
     public boolean isOccupied() {
         return this.cell != null;
     }
 
-    public void updateState(Map<String, Boolean> occupiedLocations, int rows, int cols) {
+    public void updateState(Set<Location> occupiedLocations, int rows, int cols) {
         int count = countOccupiedNeighbors(occupiedLocations, rows, cols);
         if (isOccupied() && (count <= 1 || count >= 4)) {
             this.isHabitable = false;
-            occupiedLocations.put(rows+","+cols, false);
+            occupiedLocations.remove(this);
             this.cell = null;
         }
         if (!isOccupied() && count == 3) {
             this.isHabitable = true;
-            occupiedLocations.put(row+","+col, true);
+            occupiedLocations.add(this);
             this.cell = new Cell(this);
         }
     }
 
-    private int countOccupiedNeighbors(Map<String, Boolean> occupiedLocations, int rows, int cols) {
+    private int countOccupiedNeighbors(Set<Location> occupiedLocations, int rows, int cols) {
         int count = 0;
         int[] directions = {-1, 0, 1};
         for (int dr : directions) {
@@ -55,7 +55,8 @@ public class Location {
                 if (dr == 0 && dc == 0) continue;
                 int newRow = this.row + dr;
                 int newCol = this.col + dc;
-                if (isWithinBounds(newRow, newCol, rows, cols) && occupiedLocations.getOrDefault(newRow+","+newCol, false)) {
+                Location neighbouringLocation = new Location(newRow, newCol);
+                if (isWithinBounds(newRow, newCol, rows, cols) && occupiedLocations.contains(neighbouringLocation)) {
                     count++;
                 }
             }
@@ -65,5 +66,18 @@ public class Location {
 
     private boolean isWithinBounds(int newRow, int newCol, int rows, int cols) {
         return newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Location location = (Location) obj;
+        return row == location.row && col == location.col;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(row, col);
     }
 }

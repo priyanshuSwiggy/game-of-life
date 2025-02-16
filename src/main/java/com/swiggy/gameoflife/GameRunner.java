@@ -1,5 +1,9 @@
 package com.swiggy.gameoflife;
 
+import com.swiggy.gameoflife.exception.InvalidGridDimensionsException;
+import com.swiggy.gameoflife.exception.InvalidSeedPercentageException;
+import com.swiggy.gameoflife.exception.NeverEndingCycleException;
+
 import java.util.Scanner;
 
 public class GameRunner {
@@ -21,7 +25,7 @@ public class GameRunner {
                 }
                 grid.update(m, n);
             }
-        } catch (Exception e) {
+        } catch (InvalidGridDimensionsException | InvalidSeedPercentageException | NeverEndingCycleException e) {
             System.err.println(e.getMessage());
         }
     }

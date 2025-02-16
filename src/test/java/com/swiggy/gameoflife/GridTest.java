@@ -8,9 +8,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -37,7 +35,7 @@ public class GridTest {
     @Mock
     private Location location21;
 
-    private Map<String, Boolean> occupiedLocations;
+    private Set<Location> occupiedLocations;
 
     @Before
     public void setUp() {
@@ -47,7 +45,7 @@ public class GridTest {
                 List.of(location10, location11),
                 List.of(location20, location21)
         );
-        occupiedLocations = new HashMap<>();
+        occupiedLocations = new HashSet<>();
         grid = new Grid(3, 2, dimensions, occupiedLocations);
     }
     @Test(expected = InvalidGridDimensionsException.class)
@@ -122,27 +120,33 @@ public class GridTest {
 
     @Test
     public void testAreAllCellsDead_ReturnsTrue_WhenAllLocationsAreNotHabitable() {
-        when(location00.isHabitable()).thenReturn(false);
-        when(location01.isHabitable()).thenReturn(false);
-        when(location10.isHabitable()).thenReturn(false);
-        when(location11.isHabitable()).thenReturn(false);
-        when(location20.isHabitable()).thenReturn(false);
-        when(location21.isHabitable()).thenReturn(false);
+        when(location00.isOccupied()).thenReturn(false);
+        when(location01.isOccupied()).thenReturn(false);
+        when(location10.isOccupied()).thenReturn(false);
+        when(location11.isOccupied()).thenReturn(false);
+        when(location20.isOccupied()).thenReturn(false);
+        when(location21.isOccupied()).thenReturn(false);
+
+        occupiedLocations.clear();
 
         assertTrue(grid.areAllCellsDead());
     }
 
     @Test
     public void testAreAllCellsDead_ReturnsFalse_WhenAnyLocationIsHabitable() {
-        when(location00.isHabitable()).thenReturn(false);
-        when(location01.isHabitable()).thenReturn(true);
-        when(location10.isHabitable()).thenReturn(false);
-        when(location11.isHabitable()).thenReturn(false);
-        when(location20.isHabitable()).thenReturn(false);
-        when(location21.isHabitable()).thenReturn(false);
+        when(location00.isOccupied()).thenReturn(false);
+        when(location01.isOccupied()).thenReturn(true);
+        when(location10.isOccupied()).thenReturn(false);
+        when(location11.isOccupied()).thenReturn(false);
+        when(location20.isOccupied()).thenReturn(false);
+        when(location21.isOccupied()).thenReturn(false);
+
+        occupiedLocations.clear();
+        occupiedLocations.add(location01);
 
         assertFalse(grid.areAllCellsDead());
     }
+
 
     @Test
     public void testDisplay_PrintsCorrectRepresentation_WhenAllLocationsAreOccupied() {

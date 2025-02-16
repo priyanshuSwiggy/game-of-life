@@ -10,21 +10,22 @@ public class Grid {
     private final int rows;
     private final int cols;
     private final List<List<Location>> dimensions;
-    private final Map<String, Boolean> occupiedLocations;
+    private final Set<Location> occupiedLocations;
     private final Random random = new Random();
     private final Map<String, Integer> stateHistory = new HashMap<>();
+    private static final int MAX_CYCLE_COUNT = 3;
 
     public Grid(int rows, int cols) {
-        checkValidGridDimensions(rows, cols);
+        validateGridDimensions(rows, cols);
         this.rows = rows;
         this.cols = cols;
         this.dimensions = new ArrayList<>();
-        this.occupiedLocations = new HashMap<>();
+        this.occupiedLocations = new HashSet<>();
         initializeGrid();
     }
 
-    public Grid(int rows, int cols, List<List<Location>> dimensions, Map<String, Boolean> occupiedLocations) {
-        checkValidGridDimensions(rows, cols);
+    public Grid(int rows, int cols, List<List<Location>> dimensions, Set<Location> occupiedLocations) {
+        validateGridDimensions(rows, cols);
         this.rows = rows;
         this.cols = cols;
         this.dimensions = dimensions;
@@ -42,35 +43,31 @@ public class Grid {
     }
 
     public void seedRandomCells(int rows, int cols, int seedPercentage) {
-        checkValidSeedPercentage(seedPercentage);
-        int dimension = rows * cols;
-        int habitableLocation = dimension * seedPercentage / 100;
-        Set<String> processedLocation = new HashSet<>();
+        validateSeedPercentage(seedPercentage);
+        int totalLocations = rows * cols;
+        int habitableLocations = totalLocations * seedPercentage / 100;
+        Set<Location> processedLocations = new HashSet<>();
 
-        int i =0;
-        while(i<habitableLocation){
+        while(processedLocations.size() < habitableLocations){
             int row = random.nextInt(rows);
             int col = random.nextInt(cols);
-            String locationKey = row + "," + col;
 
             Location location = dimensions.get(row).get(col);
-            if(!processedLocation.contains(locationKey) && !location.isOccupied()){
+            if (!processedLocations.contains(location) && !location.isOccupied()) {
                 location.makeHabitable();
-                occupiedLocations.put(locationKey, true);
-                new Cell(location);
-                processedLocation.add(locationKey);
-                i++;
+                occupiedLocations.add(location);
+                processedLocations.add(location);
             }
         }
     }
 
-    private void checkValidGridDimensions(int rows, int cols) {
+    private void validateGridDimensions(int rows, int cols) {
         if (rows <= 0 || cols <= 0) {
             throw new InvalidGridDimensionsException();
         }
     }
 
-    private void checkValidSeedPercentage(int seedPercentage) {
+    private void validateSeedPercentage(int seedPercentage) {
         if (seedPercentage <= 0 || seedPercentage >= 100) {
             throw new InvalidSeedPercentageException();
         }
@@ -79,31 +76,21 @@ public class Grid {
     public void display() {
         for (List<Location> locations : dimensions) {
             for (Location location : locations) {
-                if(location.isOccupied())
-                    System.out.print("*");
-                else
-                    System.out.print("_");
+                System.out.print(location.isOccupied() ? CellState.ALIVE : CellState.DEAD);
             }
             System.out.println();
         }
     }
 
     public boolean areAllCellsDead() {
-        for (List<Location> locations : dimensions) {
-            for (Location location : locations) {
-                if (location.isHabitable()) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return occupiedLocations.isEmpty();
     }
 
     public void update(int rows, int cols) {
         String currentState = getCurrentState();
         stateHistory.put(currentState, stateHistory.getOrDefault(currentState, 0) + 1);
 
-        if (stateHistory.get(currentState) >= 3) {
+        if (stateHistory.get(currentState) >= MAX_CYCLE_COUNT) {
             throw new NeverEndingCycleException();
         }
         for (List<Location> locations : dimensions) {
@@ -117,7 +104,7 @@ public class Grid {
         StringBuilder stateBuilder = new StringBuilder();
         for (List<Location> locations : dimensions) {
             for (Location location : locations) {
-                stateBuilder.append(location.isOccupied() ? "*" : "_");
+                stateBuilder.append(location.isOccupied() ? CellState.ALIVE : CellState.DEAD);
             }
             stateBuilder.append("\n");
         }
