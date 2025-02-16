@@ -42,10 +42,10 @@ public class Grid {
         }
     }
 
-    public void seedRandomCells(int rows, int cols, int seedPercentage) {
+    public void seedRandomCells(int rows, int cols, double seedPercentage) {
         validateSeedPercentage(seedPercentage);
         int totalLocations = rows * cols;
-        int habitableLocations = totalLocations * seedPercentage / 100;
+        int habitableLocations = totalLocations * (int) seedPercentage / 100;
         Set<Location> processedLocations = new HashSet<>();
 
         while(processedLocations.size() < habitableLocations){
@@ -67,7 +67,7 @@ public class Grid {
         }
     }
 
-    private void validateSeedPercentage(int seedPercentage) {
+    private void validateSeedPercentage(double seedPercentage) {
         if (seedPercentage <= 0 || seedPercentage >= 100) {
             throw new InvalidSeedPercentageException();
         }

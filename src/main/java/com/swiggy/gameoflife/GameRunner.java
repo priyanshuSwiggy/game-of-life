@@ -15,7 +15,7 @@ public class GameRunner {
         this.scanner = scanner;
     }
 
-    public void startGame(int m, int n, int seedPercentage) {
+    public void startGame(int m, int n, double seedPercentage) {
         try {
             grid.seedRandomCells(m, n, seedPercentage);
             while (true) {
