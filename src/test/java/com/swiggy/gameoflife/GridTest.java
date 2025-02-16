@@ -49,18 +49,38 @@ public class GridTest {
         grid = new Grid(3, 2, dimensions, occupiedLocations);
     }
     @Test(expected = InvalidGridDimensionsException.class)
-    public void testInvalidGridDimensionsException_ThrowsException_WhenRowIsNonPositive() {
+    public void testInvalidGridDimensionsException_ThrowsException_WhenRowIs0() {
+        new Grid(0, 2);
+    }
+
+    @Test(expected = InvalidGridDimensionsException.class)
+    public void testInvalidGridDimensionsException_ThrowsException_WhenRowIsNegative() {
         new Grid(-1, 2);
     }
 
     @Test(expected = InvalidGridDimensionsException.class)
-    public void testInvalidGridDimensionsException_ThrowsException_WhenColumnIsNonPositive() {
+    public void testInvalidGridDimensionsException_ThrowsException_WhenColumnIs0() {
+        new Grid(1, 0);
+    }
+
+    @Test(expected = InvalidGridDimensionsException.class)
+    public void testInvalidGridDimensionsException_ThrowsException_WhenColumnIsNegative() {
         new Grid(1, -2);
     }
 
     @Test(expected = InvalidSeedPercentageException.class)
-    public void testInvalidSeedPercentageException_ThrowsException_WhenSeedPercentageIsLessThan0() {
+    public void testInvalidSeedPercentageException_ThrowsException_WhenSeedPercentageIs0() {
+        grid.seedRandomCells(2, 2, 0);
+    }
+
+    @Test(expected = InvalidSeedPercentageException.class)
+    public void testInvalidSeedPercentageException_ThrowsException_WhenSeedPercentageIsNegative() {
         grid.seedRandomCells(2, 2, -1);
+    }
+
+    @Test(expected = InvalidSeedPercentageException.class)
+    public void testInvalidSeedPercentageException_ThrowsException_WhenSeedPercentageIs100() {
+        grid.seedRandomCells(2, 2, 100);
     }
 
     @Test(expected = InvalidSeedPercentageException.class)
@@ -69,7 +89,7 @@ public class GridTest {
     }
 
     @Test
-    public void testSeedRandomCells_SetsCorrectNumberOfHabitableLocations_WhenSeedPercentageIs50() {
+    public void testSeedRandomCells_SetsNumberOfHabitableLocations3_WhenSeedPercentageIs50() {
         when(location00.isOccupied()).thenReturn(true);
         when(location01.isOccupied()).thenReturn(true);
         when(location10.isOccupied()).thenReturn(true);
@@ -88,7 +108,7 @@ public class GridTest {
     }
 
     @Test
-    public void testSeedRandomCells_SetsCorrectNumberOfHabitableLocations_WhenSeedPercentageIs30() {
+    public void testSeedRandomCells_SetsNumberOfHabitableLocations1_WhenSeedPercentageIs30() {
         when(location00.isOccupied()).thenReturn(false);
         when(location01.isOccupied()).thenReturn(false);
         when(location10.isOccupied()).thenReturn(true);
