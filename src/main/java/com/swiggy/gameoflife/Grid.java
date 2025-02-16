@@ -113,7 +113,7 @@ public class Grid {
         }
     }
 
-    private String getCurrentState() {
+    public String getCurrentState() {
         StringBuilder stateBuilder = new StringBuilder();
         for (List<Location> locations : dimensions) {
             for (Location location : locations) {

@@ -2,13 +2,12 @@ package com.swiggy.gameoflife;
 
 import com.swiggy.gameoflife.exception.InvalidGridDimensionsException;
 import com.swiggy.gameoflife.exception.InvalidSeedPercentageException;
+import com.swiggy.gameoflife.exception.NeverEndingCycleException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,9 +39,6 @@ public class GridTest {
 
     private Map<String, Boolean> occupiedLocations;
 
-    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    private final PrintStream originalOut = System.out;
-
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -53,7 +49,6 @@ public class GridTest {
         );
         occupiedLocations = new HashMap<>();
         grid = new Grid(3, 2, dimensions, occupiedLocations);
-        System.setOut(new PrintStream(outContent));
     }
     @Test(expected = InvalidGridDimensionsException.class)
     public void testInvalidGridDimensionsException_ThrowsException_WhenRowIsNonPositive() {
@@ -161,7 +156,7 @@ public class GridTest {
         grid.display();
 
         String expectedOutput = "**\n**\n**\n";
-        assertEquals(expectedOutput, outContent.toString());
+        assertEquals(expectedOutput, grid.getCurrentState());
     }
 
     @Test
@@ -176,7 +171,7 @@ public class GridTest {
         grid.display();
 
         String expectedOutput = "__\n__\n__\n";
-        assertEquals(expectedOutput, outContent.toString());
+        assertEquals(expectedOutput, grid.getCurrentState());
     }
 
     @Test
@@ -191,6 +186,14 @@ public class GridTest {
         grid.display();
 
         String expectedOutput = "*_\n*_\n*_\n";
-        assertEquals(expectedOutput, outContent.toString());
+        assertEquals(expectedOutput, grid.getCurrentState());
+    }
+
+    @Test(expected = NeverEndingCycleException.class)
+    public void testNeverEndingCycleException_ThrowsException_WhenSameStateIsRepeatedMoreThan3Times() {
+        grid.update(4, 4);
+        grid.update(4, 4);
+        grid.update(4, 4);
+        grid.update(4, 4);
     }
 }
