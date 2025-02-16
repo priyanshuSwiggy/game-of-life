@@ -19,7 +19,7 @@ public class GameRunner {
                 if (grid.areAllCellsDead() || "q".equalsIgnoreCase(scanner.nextLine())) {
                     break;
                 }
-                grid.update();
+                grid.update(m, n);
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());

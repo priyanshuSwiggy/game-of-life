@@ -70,8 +70,8 @@ public class GameRunnerTest {
         when(scanner.nextLine()).thenReturn("q");
 
         gameRunner.startGame(4, 4, 60);
-        grid.update();
+        grid.update(4, 4);
 
-        verify(grid, atLeastOnce()).update();
+        verify(grid, atLeastOnce()).update(4, 4);
     }
 }

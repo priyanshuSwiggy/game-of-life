@@ -3,11 +3,7 @@ package com.swiggy.gameoflife;
 import com.swiggy.gameoflife.exception.InvalidGridDimensionsException;
 import com.swiggy.gameoflife.exception.InvalidSeedPercentageException;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class Grid {
 
@@ -120,6 +116,7 @@ public class Grid {
     private final int rows;
     private final int cols;
     private final List<List<Location>> dimensions;
+    private final Map<String, Boolean> occupiedLocations;
     private final Random random = new Random();
 
     public Grid(int rows, int cols) {
@@ -127,14 +124,16 @@ public class Grid {
         this.rows = rows;
         this.cols = cols;
         this.dimensions = new ArrayList<>();
+        this.occupiedLocations = new HashMap<>();
         initializeGrid();
     }
 
-    public Grid(int rows, int cols, List<List<Location>> dimensions) {
+    public Grid(int rows, int cols, List<List<Location>> dimensions, Map<String, Boolean> occupiedLocations) {
         checkValidGridDimensions(rows, cols);
         this.rows = rows;
         this.cols = cols;
         this.dimensions = dimensions;
+        this.occupiedLocations = occupiedLocations;
     }
 
     private void initializeGrid() {
@@ -162,6 +161,7 @@ public class Grid {
             Location location = dimensions.get(row).get(col);
             if(!processedLocation.contains(locationKey) && !location.isOccupied()){
                 location.makeHabitable();
+                occupiedLocations.put(locationKey, true);
                 new Cell(location);
                 processedLocation.add(locationKey);
                 i++;
@@ -184,7 +184,10 @@ public class Grid {
     public void display() {
         for (List<Location> locations : dimensions) {
             for (Location location : locations) {
-                System.out.print(location);
+                if(location.isOccupied())
+                    System.out.println("*");
+                else
+                    System.out.println("_");
             }
             System.out.println();
         }
@@ -201,10 +204,10 @@ public class Grid {
         return true;
     }
 
-    public void update() {
+    public void update(int rows, int cols) {
         for (List<Location> locations : dimensions) {
             for (Location location : locations) {
-                location.updateState();
+                location.updateState(occupiedLocations, rows, cols);
             }
         }
     }

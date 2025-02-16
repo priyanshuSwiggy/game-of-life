@@ -8,10 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -40,6 +37,8 @@ public class GridTest {
 
     private List<List<Location>> dimensions;
 
+    private Map<String, Boolean> occupiedLocations;
+
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -48,7 +47,7 @@ public class GridTest {
                 List.of(location10, location11),
                 List.of(location20, location21)
         );
-        grid = new Grid(3, 2, dimensions);
+        grid = new Grid(3, 2, dimensions, occupiedLocations);
     }
 //
 //    @Mock
@@ -292,14 +291,14 @@ public class GridTest {
 
     @Test
     public void testUpdate_CallsUpdateStateOnAllLocations_WhenCalled() {
-        grid.update();
+        grid.update(3, 2);
 
-        verify(location00, times(1)).updateState();
-        verify(location01, times(1)).updateState();
-        verify(location10, times(1)).updateState();
-        verify(location11, times(1)).updateState();
-        verify(location20, times(1)).updateState();
-        verify(location21, times(1)).updateState();
+        verify(location00, times(1)).updateState(occupiedLocations, 3, 2);
+        verify(location10, times(1)).updateState(occupiedLocations, 3, 2);
+        verify(location01, times(1)).updateState(occupiedLocations, 3, 2);
+        verify(location11, times(1)).updateState(occupiedLocations, 3, 2);
+        verify(location20, times(1)).updateState(occupiedLocations, 3, 2);
+        verify(location21, times(1)).updateState(occupiedLocations, 3, 2);
     }
 
     @Test
