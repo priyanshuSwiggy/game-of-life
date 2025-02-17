@@ -246,4 +246,126 @@ public class LocationTest {
         assertFalse(location11.isHabitable());
         assertFalse(location11.isOccupied());
     }
+
+    @Test
+    public void testUpdateState_VerifyUpToThirdGeneration_WhenCalled() {
+        Set<Location> occupiedLocations = new HashSet<>();
+
+        Location location00 = new Location(0, 0, true);
+        location00.makeHabitable();
+        occupiedLocations.add(location00);
+
+        Location location01 = new Location(0, 1, true);
+        location01.makeHabitable();
+        occupiedLocations.add(location01);
+
+        Location location10 = new Location(1, 0, true);
+        location10.makeHabitable();
+        occupiedLocations.add(location10);
+
+        Location location11 = new Location(1, 1, true);
+        location11.makeHabitable();
+        occupiedLocations.add(location11);
+
+        location00.updateState(occupiedLocations, 3, 2);
+        location01.updateState(occupiedLocations, 3, 2);
+        location10.updateState(occupiedLocations, 3, 2);
+        location11.updateState(occupiedLocations, 3, 2);
+
+        assertTrue(location00.isHabitable());
+        assertTrue(location01.isHabitable());
+        assertTrue(location10.isHabitable());
+        assertTrue(location11.isHabitable());
+
+        location00.updateState(occupiedLocations, 3, 2);
+        location01.updateState(occupiedLocations, 3, 2);
+        location10.updateState(occupiedLocations, 3, 2);
+        location11.updateState(occupiedLocations, 3, 2);
+
+        assertTrue(location00.isHabitable());
+        assertTrue(location01.isHabitable());
+        assertTrue(location10.isHabitable());
+        assertTrue(location11.isHabitable());
+
+        location00.updateState(occupiedLocations, 3, 2);
+        location01.updateState(occupiedLocations, 3, 2);
+        location10.updateState(occupiedLocations, 3, 2);
+        location11.updateState(occupiedLocations, 3, 2);
+
+        assertTrue(location00.isHabitable());
+        assertTrue(location01.isHabitable());
+        assertTrue(location10.isHabitable());
+        assertTrue(location11.isHabitable());
+    }
+
+    @Test
+    public void testUpdateState_VerifyUpToFifthGeneration_WhenCalled() {
+        Set<Location> occupiedLocations = new HashSet<>();
+
+        Location location00 = new Location(0, 0, true);
+        location00.makeHabitable();
+        occupiedLocations.add(location00);
+
+        Location location01 = new Location(0, 1, true);
+        location01.makeHabitable();
+        occupiedLocations.add(location01);
+
+        Location location10 = new Location(1, 0, true);
+        location10.makeHabitable();
+        occupiedLocations.add(location10);
+
+        Location location11 = new Location(1, 1, true);
+        location11.makeHabitable();
+        occupiedLocations.add(location11);
+
+        location00.updateState(occupiedLocations, 3, 2);
+        location01.updateState(occupiedLocations, 3, 2);
+        location10.updateState(occupiedLocations, 3, 2);
+        location11.updateState(occupiedLocations, 3, 2);
+
+        assertTrue(location00.isHabitable());
+        assertTrue(location01.isHabitable());
+        assertTrue(location10.isHabitable());
+        assertTrue(location11.isHabitable());
+
+        location00.updateState(occupiedLocations, 3, 2);
+        location01.updateState(occupiedLocations, 3, 2);
+        location10.updateState(occupiedLocations, 3, 2);
+        location11.updateState(occupiedLocations, 3, 2);
+
+        assertTrue(location00.isHabitable());
+        assertTrue(location01.isHabitable());
+        assertTrue(location10.isHabitable());
+        assertTrue(location11.isHabitable());
+
+        location00.updateState(occupiedLocations, 3, 2);
+        location01.updateState(occupiedLocations, 3, 2);
+        location10.updateState(occupiedLocations, 3, 2);
+        location11.updateState(occupiedLocations, 3, 2);
+
+        assertTrue(location00.isHabitable());
+        assertTrue(location01.isHabitable());
+        assertTrue(location10.isHabitable());
+        assertTrue(location11.isHabitable());
+
+        location00.updateState(occupiedLocations, 3, 2);
+        location01.updateState(occupiedLocations, 3, 2);
+        location10.updateState(occupiedLocations, 3, 2);
+        location11.updateState(occupiedLocations, 3, 2);
+
+        assertTrue(location00.isHabitable());
+        assertTrue(location01.isHabitable());
+        assertTrue(location10.isHabitable());
+        assertTrue(location11.isHabitable());
+
+        location00.updateState(occupiedLocations, 3, 2);
+        location01.updateState(occupiedLocations, 3, 2);
+        location10.updateState(occupiedLocations, 3, 2);
+        location11.updateState(occupiedLocations, 3, 2);
+
+        assertTrue(location00.isHabitable());
+        assertTrue(location01.isHabitable());
+        assertTrue(location10.isHabitable());
+        assertTrue(location11.isHabitable());
+    }
 }
